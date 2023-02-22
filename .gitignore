@@ -1,3 +1,5 @@
-**/*.ipynb
-**/*.pdf
-**/*.csv
+*.ipynb
+*.pdf
+*.iml
+.idea
+.vscode
