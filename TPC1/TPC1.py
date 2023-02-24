@@ -1,6 +1,5 @@
 from prettytable import PrettyTable
 import matplotlib.pyplot as plt
-import os
 
 def read_file():
     data = dict()
@@ -167,7 +166,7 @@ def print_distribuicao_int(table_title, table_fields, data):
         table.add_row([tuplo_para_intervalo(key), data[key], '{:.2f} %'.format(percentage)])
 
     print(table)
-    
+
 def grafico_barras(titulo, eixo_x, eixo_y, data):
     x_values = [str(key) for key in data.keys()]
     y_values = data.values()
@@ -242,44 +241,32 @@ def grafico_circular_int(titulo, data):
     plt.title(titulo)
     
     plt.show()
-
-def menu():
-    data = read_file()
-    dict_dist_sex = dist_sexo(data['D'])
-    dict_dist_idade = dist_idade(data['D'])
-    dict_dist_colestrol = dist_colestrol(data['D'])
     
+def menu(dict_dist_sex, dict_dist_idade, dict_dist_colestrol):
     table = PrettyTable()
-    table.title = "Menu"
+    table.title = "Menu de Gráficos"
     table.field_names = ["Nº", "Opção"]
     table.align['Opção'] = 'l'
     
-    table.add_row(["", "Tabela"])
+    table.add_row(["", "Gráfico de Barras"])
     table.add_row(["---", "-------------------------------------------------------"])
     table.add_row(["1", "Distribuição da doença por sexo"])
     table.add_row(["2", "Distribuição da doença por escalão etário"])
     table.add_row(["3", "Distribuição da doença por nível de colestrol"])
     table.add_row(["---", "-------------------------------------------------------"])
-    table.add_row(["", "Gráfico de Barras"])
-    table.add_row(["---", "-------------------------------------------------------"])
+    table.add_row(["", "Gráfico Circular"])
+    table.add_row(["---", "-------------------------------------------------------"])    
     table.add_row(["4", "Distribuição da doença por sexo"])
     table.add_row(["5", "Distribuição da doença por escalão etário"])
     table.add_row(["6", "Distribuição da doença por nível de colestrol"])
-    table.add_row(["---", "-------------------------------------------------------"])
-    table.add_row(["", "Gráfico Circular"])
-    table.add_row(["---", "-------------------------------------------------------"])    
-    table.add_row(["7", "Distribuição da doença por sexo"])
-    table.add_row(["8", "Distribuição da doença por escalão etário"])
-    table.add_row(["9", "Distribuição da doença por nível de colestrol"])
     table.add_row(["---", "-------------------------------------------------------"])
     table.add_row(["0", "Sair"])
     
     saida = -1
     opcao_invalida = False
-    while saida != 0:
-        os.system('cls' if os.name in ('nt', 'dos') else 'clear')
-        
+    while saida != 0:        
         if not opcao_invalida:
+            print("\n", end='')
             print(table)
 
         option_flag = False
@@ -287,7 +274,7 @@ def menu():
         while not option_flag:
             try:
                 opcao = int(opcao)
-                if opcao < 0 or opcao > 9:
+                if opcao < 0 or opcao > 6:
                     print("Opção inválida!")
                     option_flag = False
                     opcao = input("\nIntroduza novamente a sua opção: ")
@@ -302,42 +289,38 @@ def menu():
         opcao_invalida = False
         
         if saida == 1:
-            os.system('cls' if os.name in ('nt', 'dos') else 'clear')
-            print_distribuicao("Distribuição da doença por sexo", ["Sexo", "Frequência", "Percentagem (%)"], dict_dist_sex)
-            input("\nPrima ENTER para continuar... ")
-
-        elif saida == 2:
-            os.system('cls' if os.name in ('nt', 'dos') else 'clear')
-            print_distribuicao_int("Distribuição da doença por escalão etário", ["Idade", "Frequência", "Percentagem (%)"], dict_dist_idade)
-            input("\nPrima ENTER para continuar... ")
-
-        elif saida == 3:
-            os.system('cls' if os.name in ('nt', 'dos') else 'clear')
-            print_distribuicao_int("Distribuição da doença por nível de colestrol", ["Colestrol", "Frequência", "Percentagem (%)"], dict_dist_colestrol)
-            input("\nPrima ENTER para continuar... ")
-
-        elif saida == 4:
             grafico_barras("Distribuição da doença por sexo", "Sexo", "Frequência", dict_dist_sex)
 
-        elif saida == 5:
+        elif saida == 2:
             grafico_barras_int("Distribuição da doença por escalão etário", "Idade", "Frequência", dict_dist_idade)
 
-        elif saida == 6:
+        elif saida == 3:
             grafico_barras_int("Distribuição da doença por nível de colestrol", "Colestrol", "Frequência", dict_dist_colestrol)
 
-        elif saida == 7:
+        elif saida == 4:
             grafico_circular("Distribuição da doença por sexo", dict_dist_sex)
 
-        elif saida == 8:
+        elif saida == 5:
             grafico_circular_int("Distribuição da doença por escalão etário", dict_dist_idade)
 
-        elif saida == 9:
+        elif saida == 6:
             grafico_circular_int("Distribuição da doença por nível de colestrol", dict_dist_colestrol)
 
         elif saida != 0:
             print("Opção inválida!")
             opcao_invalida = True
+            
+            
+data = read_file()
+dict_dist_sex = dist_sexo(data['D'])
+dict_dist_idade = dist_idade(data['D'])
+dict_dist_colestrol = dist_colestrol(data['D'])
 
-
-if __name__ == "__main__":
-    menu()
+print_distribuicao("Distribuição da doença por sexo", ["Sexo", "Frequência", "Percentagem (%)"], dict_dist_sex)
+print("\n", end='')
+print_distribuicao_int("Distribuição da doença por escalão etário", ["Idade", "Frequência", "Percentagem (%)"], dict_dist_idade)
+print("\n", end='')
+print_distribuicao_int("Distribuição da doença por nível de colestrol", ["Colestrol", "Frequência", "Percentagem (%)"], dict_dist_colestrol)
+print("\n", end='')
+    
+menu(dict_dist_sex, dict_dist_idade, dict_dist_colestrol)
