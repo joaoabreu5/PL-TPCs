@@ -65,7 +65,8 @@ def main():
     print("Input:")
     text = read_stdin()
     numbers = parse(text)
-    if len(text) == 0 or text[-1].strip() == '':
+    lines = text.split("\n")
+    if lines[-1].strip() == '':
         print("\nOutput:")
     else:
         print("\n\nOutput:")
