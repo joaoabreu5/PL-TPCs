@@ -74,12 +74,13 @@ def print_top5_nomes_por_seculo(table_title, table_fields, data):
             
                 if pos <= 5:
                     percentage = freq / total * 100
-
+                    
                     precision = 2
                     while round(percentage, precision) == 0.00:
                         precision += 1
-                    
+                        
                     table.add_row([pos, nome, freq, '{:.{}f} %'.format(percentage, precision)])
+                
                 else:
                     break
                 
