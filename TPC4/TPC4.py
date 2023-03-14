@@ -14,30 +14,45 @@ def get_json_file_path(csv_file_path):
     return json_file_path
 
 
-def numbers_list(lista):
+def is_numbers_list(lista):
     for n in lista:
-        match = re.match(r"[+-]?\d+", str(n))
+        match = re.match(r"^[+-]?\d*\.?\d+$", str(n))
         if match is None:
             return False
                
     return True
 
+def convert_str_list(lista):
+    for i in range(len(lista)):
+        lista[i] = float(lista[i])
+        if lista[i].is_integer():
+            lista[i] = int(lista[i])
+    
+    return lista
+
 def manage_functions(funcao, lista):
     r = ""
-    lista_nums = numbers_list(lista)
+    lista_nums = is_numbers_list(lista)
     
     if lista_nums:    
         if funcao == 'sum':
             r = sum(lista)
+            if r.is_integer():
+                r = int(r)
         elif funcao == 'media':
             r = sum(lista)/len(lista)
+            if r.is_integer():
+                r = int(r)
         elif funcao == 'max':
             r = max(lista)
+            if r.is_integer():
+                r = int(r)
         elif funcao == 'min':
             r = min(lista)
+            if r.is_integer():
+                r = int(r)
             
     return r
-    
     
 def convert_csv_to_json(file_path):
     file_read = open(file_path, "r")
@@ -51,8 +66,7 @@ def convert_csv_to_json(file_path):
             val_linha[-1] = val_linha[-1][0:-1]
         
         if i == 0:  
-            campos = val_linha
-        
+            campos = val_linha      
         else:
             dict_json = dict()
             j = 0
@@ -74,10 +88,9 @@ def convert_csv_to_json(file_path):
                                 aux.append(val_linha[k])
                         
                         if len(aux) >= N and len(aux) <= M:
-                            flag_lista_nums = numbers_list(aux)
+                            flag_lista_nums = is_numbers_list(aux)
                             if flag_lista_nums:    
-                                for i in range(len(aux)):
-                                    aux[i] = int(aux[i])
+                                aux = convert_str_list(aux)
                             
                             key = match1.group('nome') + '_' + match1.group('func')
                             dict_json[key] = manage_functions(match1.group('func'), aux)
@@ -92,10 +105,9 @@ def convert_csv_to_json(file_path):
                                 aux.append(val_linha[k])
 
                         if len(aux) == N:
-                            flag_lista_nums = numbers_list(aux)
+                            flag_lista_nums = is_numbers_list(aux)
                             if flag_lista_nums:    
-                                for i in range(len(aux)):
-                                    aux[i] = int(aux[i])
+                                aux = convert_str_list(aux)
                             
                             key = match2.group('nome') + '_' + match2.group('func')
                             dict_json[key] = manage_functions(match2.group('func'), aux)
@@ -111,10 +123,9 @@ def convert_csv_to_json(file_path):
                                 aux.append(val_linha[k])
                         
                         if len(aux) >= N and len(aux) <= M:
-                            flag_lista_nums = numbers_list(aux)
+                            flag_lista_nums = is_numbers_list(aux)
                             if flag_lista_nums:    
-                                for i in range(len(aux)):
-                                    aux[i] = int(aux[i])
+                                aux = convert_str_list(aux)
                             
                             key = match3.group('nome')
                             dict_json[key] = aux
@@ -129,10 +140,9 @@ def convert_csv_to_json(file_path):
                                 aux.append(val_linha[k])
                         
                         if len(aux) == N:
-                            flag_lista_nums = numbers_list(aux)
+                            flag_lista_nums = is_numbers_list(aux)
                             if flag_lista_nums:    
-                                for i in range(len(aux)):
-                                    aux[i] = int(aux[i])
+                                aux = convert_str_list(aux)
                             
                             key = match4.group('nome')
                             dict_json[key] = aux
