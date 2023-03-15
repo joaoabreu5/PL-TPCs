@@ -37,19 +37,19 @@ def manage_functions(funcao, lista):
     if lista_nums:    
         if funcao == 'sum':
             r = sum(lista)
-            if r.is_integer():
+            if isinstance(r, float) and r.is_integer():
                 r = int(r)
         elif funcao == 'media':
             r = sum(lista)/len(lista)
-            if r.is_integer():
+            if isinstance(r, float) and r.is_integer():
                 r = int(r)
         elif funcao == 'max':
             r = max(lista)
-            if r.is_integer():
+            if isinstance(r, float) and r.is_integer():
                 r = int(r)
         elif funcao == 'min':
             r = min(lista)
-            if r.is_integer():
+            if isinstance(r, float) and r.is_integer():
                 r = int(r)
             
     return r
