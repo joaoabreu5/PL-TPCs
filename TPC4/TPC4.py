@@ -1,6 +1,7 @@
 import re
 import json
 import sys
+from math import prod
 
 def get_json_file_path(csv_file_path):
     fp_splited = re.split(r"\.", csv_file_path)
@@ -39,18 +40,41 @@ def manage_functions(funcao, lista):
             r = sum(lista)
             if isinstance(r, float) and r.is_integer():
                 r = int(r)
+                
         elif funcao == 'media':
             r = sum(lista)/len(lista)
             if isinstance(r, float) and r.is_integer():
                 r = int(r)
+                
         elif funcao == 'max':
             r = max(lista)
             if isinstance(r, float) and r.is_integer():
                 r = int(r)
+                
         elif funcao == 'min':
             r = min(lista)
             if isinstance(r, float) and r.is_integer():
                 r = int(r)
+                
+        elif funcao == 'prod':
+            r = prod(lista)
+            if isinstance(r, float) and r.is_integer():
+                r = int(r)
+                
+        elif funcao == 'len' or funcao == 'length':
+            r = len(lista)
+            if isinstance(r, float) and r.is_integer():
+                r = int(r)
+                
+        elif funcao == 'reverse':
+            lista.reverse()
+            r = lista
+            
+        elif funcao == 'sorted' or funcao == 'sorted_asc':
+            r = sorted(lista)
+            
+        elif funcao == 'sorted_desc':
+            r = sorted(lista, reverse=True)
             
     return r
     
@@ -74,8 +98,8 @@ def convert_csv_to_json(file_path):
                 val = val_linha[j]
                 
                 if val is not None:
-                    match1 = re.match(r"(?P<nome>\w+){(?P<N>\d+),(?P<M>\d+)}::(?P<func>[a-zA-Z]+)", campos[j])
-                    match2 = re.match(r"(?P<nome>\w+){(?P<N>\d+)}::(?P<func>[a-zA-Z]+)", campos[j])
+                    match1 = re.match(r"(?P<nome>\w+){(?P<N>\d+),(?P<M>\d+)}::(?P<func>[\w ]*[\w]+)", campos[j])
+                    match2 = re.match(r"(?P<nome>\w+){(?P<N>\d+)}::(?P<func>[\w ]*[\w]+)", campos[j])
                     match3 = re.match(r"(?P<nome>\w+){(?P<N>\d+),(?P<M>\d+)}", campos[j])
                     match4 = re.match(r"(?P<nome>\w+){(?P<N>\d+)}", campos[j])
                     
