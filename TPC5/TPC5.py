@@ -12,35 +12,69 @@ def soma_moedas(lista_moedas):
     moedas_invalidas = []
     
     for moeda in lista_moedas:
-        if moeda == "1c":
+        moeda_l = moeda.lower()
+        if moeda_l == "1c":
             valor += Decimal('0.01')
                       
-        elif moeda == "2c":
+        elif moeda_l == "2c":
             valor += Decimal('0.02')
             
-        elif moeda == "5c":
+        elif moeda_l == "5c":
             valor += Decimal('0.05')
             
-        elif moeda == "10c":
+        elif moeda_l == "10c":
             valor += Decimal('0.10')
             
-        elif moeda == "20c":
+        elif moeda_l == "20c":
             valor += Decimal('0.20')
             
-        elif moeda == "50c":
+        elif moeda_l == "50c":
             valor += Decimal('0.50')
             
-        elif moeda == "1e":
+        elif moeda_l == "1e":
             valor += Decimal('1')
             
-        elif moeda == "2e":
+        elif moeda_l == "2e":
             valor += Decimal('2')
             
-        else:
-            moedas_invalidas.append(moeda)
+        elif moeda not in moedas_invalidas:
+                moedas_invalidas.append(moeda)
 
     return (valor, moedas_invalidas)
 
+def moedas_troco(troco):
+    dict_moedas = {'2e': 200, '1e': 100, '50c': 50, '20c': 20, '10c': 10, '5c': 5, '2c': 2, '1c': 1}
+
+    troco_cent = int(troco * 100)
+    moedas_troco = dict()
+    
+    for moeda, valor_cent in dict_moedas.items():
+        num_moedas = troco_cent // valor_cent
+        
+        if num_moedas > 0:
+            moedas_troco[moeda] = num_moedas
+            troco_cent -= num_moedas * valor_cent
+        
+    return moedas_troco
+
+def imprime_troco(troco):
+    if troco > 0:
+        dict_moedas_troco = moedas_troco(troco)
+        print('maq: "troco = ', end='')
+        
+        i = 0
+        for moeda, num in dict_moedas_troco.items():
+            if i == 0:
+                print(f'{num}x{moeda}', end='')
+            else:
+                print(f', {num}x{moeda}', end='')
+            i += 1
+            
+        print('; Volte sempre!"')
+        
+    elif troco == 0:
+        print('maq: "troco = ' + saldo_to_string(troco) + '; Volte sempre!"')
+        
 def cabine_telefonica():
     estado = True
     on = False
@@ -56,13 +90,13 @@ def cabine_telefonica():
             if on:
                 on = False
                 estado = False
-                print('maq: "troco = ' + saldo_to_string(saldo) + '; Volte sempre!"')
+                imprime_troco(saldo)
             else:
                 print('maq: "O auscultador do telefone não foi levantado. Queira levantar o auscultador do mesmo!"')
             
         elif re.match(r"(?i)MOEDA *=", line):
             if on:
-                fall_moedas = re.findall(r"\b[0-9]+[ce]\b", line)
+                fall_moedas = re.findall(r"\b[0-9]+[ceCE]\b", line)
                 soma, moedas_invalidas = soma_moedas(fall_moedas)
                 saldo += soma
                 
@@ -119,7 +153,7 @@ def cabine_telefonica():
             
         elif re.match(r"(?i)ABORTAR", line):
             if on:
-                print('maq: "troco = ' + saldo_to_string(saldo) + '; Volte sempre!"')
+                imprime_troco(saldo)
             on = False
             estado = False
         
