@@ -82,11 +82,11 @@ def cabine_telefonica():
     
     while estado:
         line = sys.stdin.readline()
-        if re.match(r"(?i)LEVANTAR", line):
+        if re.match(r"(?i)\bLEVANTAR\b", line):
             on = True
             print('maq: "Introduza moedas."')
             
-        elif re.match(r"(?i)POUSAR", line):
+        elif re.match(r"(?i)\bPOUSAR\b", line):
             if on:
                 on = False
                 estado = False
@@ -112,46 +112,51 @@ def cabine_telefonica():
             else:
                 print('maq: "O auscultador do telefone não foi levantado. Queira levantar o auscultador do mesmo!"')
                 
-        elif re.match(r"(?i)T *= *[0-9]+", line):
+        elif re.match(r"(?i)T *=", line):
             if on:
                 num = re.search(r"[0-9]+", line)
-                num = num.group()
                 
-                if len(num) == 9:
-                    if num[:3] == "601" or num[:3] == "604":
-                        print('maq: "Esse número não é permitido neste telefone. Queira discar novo número!"')
+                if num is not None:
+                    num = num.group()
                     
-                    elif num[0] == "2":
-                        if saldo >= 0.25:
-                            saldo -= Decimal('0.25')
-                            print('maq: "saldo = ' + saldo_to_string(saldo) + '"')
-                        else:
-                            print('maq: "Saldo insuficiente."')
+                    if len(num) == 9:
+                        if num[:3] == "601" or num[:3] == "604":
+                            print('maq: "Esse número não é permitido neste telefone. Queira discar novo número!"')
                         
-                    elif num[:3] == "800":
-                        print('maq: "saldo = ' + saldo_to_string(saldo) + '"')
-                    
-                    elif num[:3] == "808":
-                        if saldo >= 0.10:
-                            saldo -= Decimal('0.10')
+                        elif num[0] == "2":
+                            if saldo >= 0.25:
+                                saldo -= Decimal('0.25')
+                                print('maq: "saldo = ' + saldo_to_string(saldo) + '"')
+                            else:
+                                print('maq: "Saldo insuficiente."')
+                            
+                        elif num[:3] == "800":
+                            print('maq: "saldo = ' + saldo_to_string(saldo) + '"')
+                        
+                        elif num[:3] == "808":
+                            if saldo >= 0.10:
+                                saldo -= Decimal('0.10')
+                                print('maq: "saldo = ' + saldo_to_string(saldo) + '"')
+                            else:
+                                print('maq: "Saldo insuficiente."')
+
+                    elif num[:2] == "00":
+                        if saldo >= 1.5:
+                            saldo -= Decimal('1.5')
                             print('maq: "saldo = ' + saldo_to_string(saldo) + '"')
                         else:
                             print('maq: "Saldo insuficiente."')
-
-                elif num[:2] == "00":
-                    if saldo >= 1.5:
-                        saldo -= Decimal('1.5')
-                        print('maq: "saldo = ' + saldo_to_string(saldo) + '"')
+                                
                     else:
-                        print('maq: "Saldo insuficiente."')
-                            
+                        print('maq: "Esse número não é permitido neste telefone. Queira discar novo número!"')
+                
                 else:
-                    print('maq: "Esse número não é permitido neste telefone. Queira discar novo número!"')
+                    print('maq: "Não introduziu um número de telefone. Queira discar um número!"')
                     
             else:
                 print('maq: "O auscultador do telefone não foi levantado. Queira levantar o auscultador do mesmo!"')
             
-        elif re.match(r"(?i)ABORTAR", line):
+        elif re.match(r"(?i)\bABORTAR\b", line):
             if on:
                 imprime_troco(saldo)
             on = False
