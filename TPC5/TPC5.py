@@ -121,7 +121,9 @@ def cabine_telefonica():
                 ms = re.match(r"(?i)\s*MOEDA\b", line).span()
                 string_moedas = line[ms[1]:]
                 
-                lista_moedas = re.split(r",", string_moedas)
+                lista_moedas = []
+                if string_moedas.strip() != "":
+                    lista_moedas = re.split(r",", string_moedas)
                 
                 soma, moedas_invalidas = soma_moedas(lista_moedas)
                 saldo += soma
