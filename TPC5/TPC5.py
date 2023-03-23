@@ -82,11 +82,11 @@ def cabine_telefonica():
     
     while estado:
         line = sys.stdin.readline()
-        if re.match(r"(?i)\bLEVANTAR\b", line):
+        if re.match(r"(?i)LEVANTAR\b", line):
             on = True
             print('maq: "Introduza moedas."')
             
-        elif re.match(r"(?i)\bPOUSAR\b", line):
+        elif re.match(r"(?i)POUSAR\b", line):
             if on:
                 on = False
                 estado = False
@@ -94,7 +94,7 @@ def cabine_telefonica():
             else:
                 print('maq: "O auscultador do telefone não foi levantado. Queira levantar o auscultador do mesmo!"')
             
-        elif re.match(r"(?i)MOEDA *=", line):
+        elif re.match(r"(?i)MOEDA\b", line):
             if on:
                 fall_moedas = re.findall(r"\b[0-9]+[ceCE]\b", line)
                 soma, moedas_invalidas = soma_moedas(fall_moedas)
@@ -114,10 +114,10 @@ def cabine_telefonica():
                 
         elif re.match(r"(?i)T *=", line):
             if on:
-                num = re.search(r"[0-9]+", line)
+                num = re.search(r"(?i)^T *= *([0-9]+)", line)
                 
                 if num is not None:
-                    num = num.group()
+                    num = num.group(1)
                     
                     if len(num) == 9:
                         if num[:3] == "601" or num[:3] == "604":
@@ -156,7 +156,7 @@ def cabine_telefonica():
             else:
                 print('maq: "O auscultador do telefone não foi levantado. Queira levantar o auscultador do mesmo!"')
             
-        elif re.match(r"(?i)\bABORTAR\b", line):
+        elif re.match(r"(?i)ABORTAR\b", line):
             if on:
                 imprime_troco(saldo)
             on = False
