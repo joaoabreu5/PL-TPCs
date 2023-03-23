@@ -1,16 +1,16 @@
 import re
-import sys
 from decimal import Decimal
 
 def saldo_to_string(saldo):
     cent = int((saldo - int(saldo)) * 100)
     eur = int(saldo)
     return str(eur) + 'e' + str(cent) + 'c'
-    
+
+  
 def soma_moedas(lista_moedas):
     valor = Decimal('0')
     moedas_invalidas = []
-    
+
     i = 0
     for moeda in lista_moedas:
         match_moeda = True
@@ -58,6 +58,7 @@ def soma_moedas(lista_moedas):
 
     return (valor, moedas_invalidas)
 
+
 def moedas_troco(troco):
     dict_moedas = {'2e': 200, '1e': 100, '50c': 50, '20c': 20, '10c': 10, '5c': 5, '2c': 2, '1c': 1}
 
@@ -72,6 +73,7 @@ def moedas_troco(troco):
             troco_cent -= num_moedas * valor_cent
         
     return moedas_troco
+
 
 def imprime_troco(troco):
     if troco > 0:
@@ -90,14 +92,15 @@ def imprime_troco(troco):
         
     elif troco == 0:
         print('maq: "troco = ' + saldo_to_string(troco) + '; Volte sempre!"')
-        
+
+      
 def cabine_telefonica():
     estado = True
     on = False
     saldo = Decimal('0')
     
     while estado:
-        line = sys.stdin.readline()
+        line = input()
         if re.match(r"(?i)\s*LEVANTAR\b", line):
             if not on:
                 print('maq: "Introduza moedas."')
@@ -137,16 +140,13 @@ def cabine_telefonica():
                 
         elif re.match(r"(?i)\s*T *=", line):
             if on:
-                num = re.search(r"(?i)^T *= *([0-9]+)", line)
+                num = re.search(r"(?i)\s*T *= *([0-9]+)", line)
                 
                 if num is not None:
                     num = num.group(1)
                     
                     if len(num) == 9:
-                        if num[:3] == "601" or num[:3] == "604":
-                            print('maq: "Esse número não é permitido neste telefone. Queira discar novo número!"')
-                        
-                        elif num[0] == "2":
+                        if num[0] == "2":
                             if saldo >= 0.25:
                                 saldo -= Decimal('0.25')
                                 print('maq: "saldo = ' + saldo_to_string(saldo) + '"')
@@ -162,6 +162,9 @@ def cabine_telefonica():
                                 print('maq: "saldo = ' + saldo_to_string(saldo) + '"')
                             else:
                                 print('maq: "Saldo insuficiente."')
+                        
+                        else:
+                            print('maq: "Esse número não é permitido neste telefone. Queira discar novo número!"')
 
                     elif num[:2] == "00":
                         if saldo >= 1.5:
@@ -188,5 +191,5 @@ def cabine_telefonica():
         else:
             print('maq: "Comando não suportado. Queira introduzir um novo comando!"')
 
-          
+
 cabine_telefonica()
