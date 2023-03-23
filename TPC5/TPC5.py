@@ -11,34 +11,50 @@ def soma_moedas(lista_moedas):
     valor = Decimal('0')
     moedas_invalidas = []
     
+    i = 0
     for moeda in lista_moedas:
-        moeda_l = moeda.lower()
-        if moeda_l == "1c":
-            valor += Decimal('0.01')
-                      
-        elif moeda_l == "2c":
-            valor += Decimal('0.02')
+        match_moeda = True
+        moeda = moeda.strip()
+        
+        if i == len(lista_moedas) - 1:
+            match_moeda = re.match(r"([0-9a-zA-Z]+)", moeda)
+            if match_moeda is not None:
+                moeda = match_moeda.group(1)
             
-        elif moeda_l == "5c":
-            valor += Decimal('0.05')
+        if match_moeda is not None:
+            moeda_l = moeda.lower()
             
-        elif moeda_l == "10c":
-            valor += Decimal('0.10')
-            
-        elif moeda_l == "20c":
-            valor += Decimal('0.20')
-            
-        elif moeda_l == "50c":
-            valor += Decimal('0.50')
-            
-        elif moeda_l == "1e":
-            valor += Decimal('1')
-            
-        elif moeda_l == "2e":
-            valor += Decimal('2')
-            
+            if moeda_l == "1c":
+                valor += Decimal('0.01')
+                        
+            elif moeda_l == "2c":
+                valor += Decimal('0.02')
+                
+            elif moeda_l == "5c":
+                valor += Decimal('0.05')
+                
+            elif moeda_l == "10c":
+                valor += Decimal('0.10')
+                
+            elif moeda_l == "20c":
+                valor += Decimal('0.20')
+                
+            elif moeda_l == "50c":
+                valor += Decimal('0.50')
+                
+            elif moeda_l == "1e":
+                valor += Decimal('1')
+                
+            elif moeda_l == "2e":
+                valor += Decimal('2')
+                
+            elif moeda not in moedas_invalidas:
+                    moedas_invalidas.append(moeda)
+        
         elif moeda not in moedas_invalidas:
-                moedas_invalidas.append(moeda)
+                    moedas_invalidas.append(moeda)
+    
+        i += 1
 
     return (valor, moedas_invalidas)
 
@@ -82,11 +98,14 @@ def cabine_telefonica():
     
     while estado:
         line = sys.stdin.readline()
-        if re.match(r"(?i)LEVANTAR\b", line):
+        if re.match(r"(?i)\s*LEVANTAR\b", line):
+            if not on:
+                print('maq: "Introduza moedas."')
+            else:
+                print('maq: "O auscultador já se encontra levantado."')
             on = True
-            print('maq: "Introduza moedas."')
             
-        elif re.match(r"(?i)POUSAR\b", line):
+        elif re.match(r"(?i)\s*POUSAR\b", line):
             if on:
                 on = False
                 estado = False
@@ -94,10 +113,14 @@ def cabine_telefonica():
             else:
                 print('maq: "O auscultador do telefone não foi levantado. Queira levantar o auscultador do mesmo!"')
             
-        elif re.match(r"(?i)MOEDA\b", line):
+        elif re.match(r"(?i)\s*MOEDA\b", line):
             if on:
-                fall_moedas = re.findall(r"\b[0-9]+[ceCE]\b", line)
-                soma, moedas_invalidas = soma_moedas(fall_moedas)
+                ms = re.match(r"(?i)\s*MOEDA\b", line).span()
+                string_moedas = line[ms[1]:]
+                
+                lista_moedas = re.split(r",", string_moedas)
+                
+                soma, moedas_invalidas = soma_moedas(lista_moedas)
                 saldo += soma
                 
                 if len(moedas_invalidas) == 0:
@@ -112,7 +135,7 @@ def cabine_telefonica():
             else:
                 print('maq: "O auscultador do telefone não foi levantado. Queira levantar o auscultador do mesmo!"')
                 
-        elif re.match(r"(?i)T *=", line):
+        elif re.match(r"(?i)\s*T *=", line):
             if on:
                 num = re.search(r"(?i)^T *= *([0-9]+)", line)
                 
@@ -156,7 +179,7 @@ def cabine_telefonica():
             else:
                 print('maq: "O auscultador do telefone não foi levantado. Queira levantar o auscultador do mesmo!"')
             
-        elif re.match(r"(?i)ABORTAR\b", line):
+        elif re.match(r"(?i)\s*ABORTAR\b", line):
             if on:
                 imprime_troco(saldo)
             on = False
