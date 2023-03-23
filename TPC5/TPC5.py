@@ -124,6 +124,8 @@ def cabine_telefonica():
                 lista_moedas = []
                 if string_moedas.strip() != "":
                     lista_moedas = re.split(r",", string_moedas)
+                else:
+                    print('maq: "Não introduziu um quaisquer moedas. Queira introduzir moedas!"')
                 
                 soma, moedas_invalidas = soma_moedas(lista_moedas)
                 saldo += soma
