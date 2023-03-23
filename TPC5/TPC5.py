@@ -155,7 +155,7 @@ def cabine_telefonica():
                                 saldo -= Decimal('0.25')
                                 print('maq: "saldo = ' + saldo_to_string(saldo) + '"')
                             else:
-                                print('maq: "Saldo insuficiente."')
+                                print('maq: "Saldo insuficiente. Custo da chamada = 0e25c."')
                             
                         elif num[:3] == "800":
                             print('maq: "saldo = ' + saldo_to_string(saldo) + '"')
@@ -165,7 +165,7 @@ def cabine_telefonica():
                                 saldo -= Decimal('0.10')
                                 print('maq: "saldo = ' + saldo_to_string(saldo) + '"')
                             else:
-                                print('maq: "Saldo insuficiente."')
+                                print('maq: "Saldo insuficiente. Custo da chamada = 0e10c."')
                         
                         else:
                             print('maq: "Esse número não é permitido neste telefone. Queira discar novo número!"')
@@ -175,7 +175,7 @@ def cabine_telefonica():
                             saldo -= Decimal('1.5')
                             print('maq: "saldo = ' + saldo_to_string(saldo) + '"')
                         else:
-                            print('maq: "Saldo insuficiente."')
+                            print('maq: "Saldo insuficiente. Custo da chamada = 1e50c."')
                                 
                     else:
                         print('maq: "Esse número não é permitido neste telefone. Queira discar novo número!"')
